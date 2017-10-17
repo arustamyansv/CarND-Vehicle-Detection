@@ -38,18 +38,14 @@ The goals / steps of this project are the following:
 [video1]: ./project_video_complete.mp4
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
-###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
+Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
 ---
-###Writeup / README
-
-####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Vehicle-Detection/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
-
-You're reading it!
+### Writeup / README
 
 ### Images Processing 
 
-####1. Images Augmentation
+#### 1. Images Augmentation
 The whole process starts from `model.py` file. This file contains data loading and model training.
 I first train classifier only using main dataset. However later on I tried and add Autti dataset to model. Code for Autti dataset extraction is in the file `autti_preprocess.py`. It run extraction of objects from autti images and rescaling them to 64x64 in advance. Taking everything except tracks.
 
@@ -63,9 +59,9 @@ Non-vehicle:
 
 ![alt text][image2]
 
-####2. Features Extraction
+#### 2. Features Extraction
 
-#####1. HOG & parameters explanation
+##### 1. HOG & parameters explanation
 Code for step is contained in file  `utils.py`. There are several methods for HOG features. Main one is `extract_features_hog`. I also utilised HOG subsampling. Method for subsampling + windows scaling iss defined in `utils.py` also (`extract_features_hog_scaled`).
 I tried different options for HOG extraction trying to change color space or number of color layers from each color space plus meta option of `skimage.hog()` method itself. 
 
@@ -91,7 +87,7 @@ Here is an example using options above:
 
 ![alt text][image7]
 
-#####2. Other feature extractions
+##### 2. Other feature extractions
 In addition to HOG I implemented bin spatial and histogram features extraction. Code for this steps also contained in file `utils.py` in methods `extract_features_spatial` and `extract_features_hist` respectively.
 Feature list became pretty big but it showed better accuracy so I decide to deal with it...
 
@@ -107,16 +103,16 @@ Here is histogram map:
 
 ![alt text][image3]
 
-####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
+#### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
 I trained linear SVC using file `model.py`. 
 In order to do this i first split by dataset 80% for train and 20% for test dataset. Then run model training and score evaluation for the test set.
 
 As a result I got pretty reasonable accuracy of 98.8%.
 
-###Sliding Window Search
+### Sliding Window Search
 
-####1. Describe how (and identify where in your code) you implemented a sliding window search. How did you decide what scales to search and how much to overlap windows?
+#### 1. Describe how (and identify where in your code) you implemented a sliding window search. How did you decide what scales to search and how much to overlap windows?
 
 Code for this block is contained in file `windows.py` file. Method takes configuration from WCONFIG object and iteratively create grids relevant to configuration specified. Method is pretty simple and approach was based on udacity example  i need to count number of possible windows in the secified area and then generate windowses itself.
 However I changed suggested approach with 'overlay' to shifts in pixels. It looks clearer on my mind. 
@@ -132,7 +128,7 @@ Here are my windows grids:
 ![alt text][image10]
 
 
-####2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
+#### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
 Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a result. Here are examples of labels map and classified image:
 
@@ -171,10 +167,10 @@ As for optimisation I implemented sub-sampling windows search and this significa
 
 ### Video Implementation
 
-####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
+#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
 Final video provided in the submission archive in the file `project_video_complete.mp4`.
 
-####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
+#### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
 I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions. Code for this part could be found in `detect_vehicle.py` file. Heatmap processing separated in the `compose_heatmap` function. 
 I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap. I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
@@ -182,9 +178,9 @@ This part included in the method `detect` as a final part of detection pipeline.
 
 ---
 
-###Discussion
+### Discussion
 
-####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
 Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.
 
